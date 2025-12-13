@@ -1,0 +1,80 @@
+:root {
+    --text-stroke: #454545;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background: #000;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 30vh;
+    font-family: 'Times New Roman', serif;
+    overflow: hidden;
+}
+.container {
+    text-align: center;
+    position: relative;
+}
+.menu {
+    padding: 8px 8px;
+    display: inline-block;
+    opacity: 1;
+    transition: opacity 0.15s ease;
+}
+.menu.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.menu-item {
+    color: #e3e3e3;
+    text-shadow: var(--text-stroke) 1px 0px 0px, var(--text-stroke) 0.540302px 0.841471px 0px, var(--text-stroke) -0.416147px 0.909297px 0px, var(--text-stroke) -0.989993px 0.14112px 0px, var(--text-stroke) -0.653644px -0.756803px 0px, var(--text-stroke) 0.283662px -0.958924px 0px, var(--text-stroke) 0.96017px -0.279416px 0px;
+    font-size: 26px;
+    padding: 2px 2px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: none;
+    position: relative;
+    text-transform: uppercase;
+    border-radius: 2px;
+    border: 1px solid transparent;
+}
+.menu-item.selected {
+    animation: pulsate .7s ease-in-out infinite;
+    border: 1px solid #736c6e;
+    outline: 1px solid #3f3f3f;
+}
+
+@keyframes pulsate {
+    0%, 100% {
+        background: transparent;
+    }
+    60% {
+        background: #554448;
+    }
+}
+
+.video-container {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.video-container.active {
+    display: block;
+}
+.video-container video {
+    width: 150px;
+    height: auto;
+    background: #000;
+}
+.video-container video.hidden-video {
+    display: none;
+}
