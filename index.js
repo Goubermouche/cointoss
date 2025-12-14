@@ -25,6 +25,16 @@ Object.values(videos).forEach(src => {
     document.head.appendChild(link);
 });
 
+function playSelectSound() {
+    const sound = new Audio('select.webm');
+    sound.play().catch(err => console.log('Audio play failed:', err));
+}
+
+function playConfirmSound() {
+    const sound = new Audio('confirm.webm');
+    sound.play().catch(err => console.log('Audio play failed:', err));
+}
+
 function updateSelection() {
     menuItems.forEach((item, index) => {
         item.classList.toggle('selected', index === selectedIndex);
@@ -35,7 +45,6 @@ function swapVideos() {
     const temp = activeVideo;
     activeVideo = standbyVideo;
     standbyVideo = temp;
-
     activeVideo.classList.remove('hidden-video');
     standbyVideo.classList.add('hidden-video');
 }
@@ -58,8 +67,8 @@ function hideMenu() {
 
 function flipCoin() {
     state = 'flipping';
+    playConfirmSound();
     hideMenu();
-
     setTimeout(() => {
         videoContainer.classList.add('active');
         currentResult = Math.random() < 0.5 ? 'heads' : 'tails';
@@ -74,48 +83,40 @@ function flipCoin() {
 
 function playOutro() {
     state = 'outro';
-
     swapVideos();
     activeVideo.onended = () => {
         showMenu();
     };
-
     activeVideo.play();
 }
 
 document.addEventListener('keydown', (e) => {
     if (state === 'menu') {
+        let oldSelectedIndex = selectedIndex;
         if (e.key === 'ArrowUp') {
-            selectedIndex = (selectedIndex - 1 + menuItems.length) % menuItems.length;
+            selectedIndex = Math.max(selectedIndex - 1, 0);
             updateSelection();
-        } else if (e.key === 'ArrowDown') {
-            selectedIndex = (selectedIndex + 1) % menuItems.length;
+
+            if (oldSelectedIndex !== selectedIndex) {
+                playSelectSound();
+            }
+        }
+        else if (e.key === 'ArrowDown') {
+            selectedIndex = Math.min(selectedIndex + 1, 1);
             updateSelection();
-        } else if (e.key === 'Enter') {
+            if (oldSelectedIndex !== selectedIndex) {
+                playSelectSound();
+            }
+        }
+        else if (e.key === 'Enter') {
             flipCoin();
         }
-    } else if (state === 'result') {
+    }
+    else if (state === 'result') {
         if (e.key === 'Enter') {
             playOutro();
         }
     }
-});
-
-menuItems.forEach((item, index) => {
-    item.addEventListener('mouseenter', () => {
-        if (state === 'menu') {
-            selectedIndex = index;
-            updateSelection();
-        }
-    });
-
-    item.addEventListener('click', () => {
-        if (state === 'menu') {
-            selectedIndex = index;
-            updateSelection();
-            flipCoin();
-        }
-    });
 });
 
 document.addEventListener('click', () => {
